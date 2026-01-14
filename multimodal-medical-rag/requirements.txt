@@ -1,0 +1,20 @@
+# PDF processing
+PyMuPDF>=1.22.5
+Pillow>=10.0.0
+
+# LangChain & OpenAI
+langchain>=0.1.0
+openai>=0.27.8
+
+# Transformers for LLaVA / image captioning
+transformers>=4.35.0
+torch>=2.1.0
+
+# FAISS for vectorstore
+faiss-cpu>=1.7.4
+
+# Optional: for unstructured partitioning (if you still want)
+unstructured>=0.9.26
+
+# Data handling
+pickle5>=0.0.12

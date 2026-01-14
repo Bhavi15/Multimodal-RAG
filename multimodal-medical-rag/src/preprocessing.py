@@ -4,6 +4,7 @@ Fast PDF preprocessing using PyMuPDF.
 - Stores ALL text chunks in a single file
 - Stores tables as separate files
 - Stores images as separate files
+- Saves all chunks as a pickle file for later use
 """
 
 import fitz  # PyMuPDF
@@ -12,10 +13,10 @@ from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
 from PIL import Image
 import io
+import pickle
 from loguru import logger
 
 from config.settings import settings
-
 
 # -----------------------------
 # Data Model
@@ -52,9 +53,11 @@ class FastPDFProcessor:
         # Single text output file
         self.text_output_file = settings.TEXT_DIR / "all_text_chunks.txt"
         self.text_output_file.parent.mkdir(parents=True, exist_ok=True)
-
-        # Clear file at start
         self.text_output_file.write_text("", encoding="utf-8")
+
+        # Make sure directories exist
+        settings.IMAGE_DIR.mkdir(parents=True, exist_ok=True)
+        settings.TABLE_DIR.mkdir(parents=True, exist_ok=True)
 
     # -----------------------------
     # Public API
@@ -114,9 +117,7 @@ class FastPDFProcessor:
             if current_length + word_len > self.chunk_size and current_words:
                 chunk_text = " ".join(current_words)
                 chunks.append(
-                    self._append_text_chunk(
-                        chunk_text, doc_name, page_number, chunk_index
-                    )
+                    self._append_text_chunk(chunk_text, doc_name, page_number, chunk_index)
                 )
 
                 overlap_count = int(len(current_words) * (self.chunk_overlap / self.chunk_size))
@@ -130,9 +131,7 @@ class FastPDFProcessor:
         if current_words:
             chunk_text = " ".join(current_words)
             chunks.append(
-                self._append_text_chunk(
-                    chunk_text, doc_name, page_number, chunk_index
-                )
+                self._append_text_chunk(chunk_text, doc_name, page_number, chunk_index)
             )
 
         return chunks
@@ -241,6 +240,16 @@ class FastPDFProcessor:
 
         return chunks
 
+    # -----------------------------
+    # Save Chunks
+    # -----------------------------
+    @staticmethod
+    def save_chunks(chunks: List[DocumentChunk], path: Path = Path("data/chunks.pkl")):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with open(path, "wb") as f:
+            pickle.dump(chunks, f)
+        logger.info(f"Chunks saved to {path}")
+
 
 # -----------------------------
 # Standalone Run
@@ -251,6 +260,8 @@ def main():
     processor = FastPDFProcessor()
     chunks = processor.process_directory()
 
+    processor.save_chunks(chunks)
+
     print("\n" + "=" * 60)
     print("PREPROCESSING RESULTS")
     print("=" * 60)
@@ -259,6 +270,7 @@ def main():
     print(f"Image chunks : {len([c for c in chunks if c.chunk_type == 'image'])}")
     print(f"Table chunks : {len([c for c in chunks if c.chunk_type == 'table'])}")
     print(f"\nText output file: {processor.text_output_file}")
+    print(f"All chunks saved to: data/chunks.pkl")
     print("=" * 60)
 
 

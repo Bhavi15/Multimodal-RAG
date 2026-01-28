@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Python
 __pycache__/
 *.pyc
@@ -11,11 +12,72 @@ venv/
 # Environment variables
 .env
 
+=======
+# Environment variables
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Data folders
+data/images/*
+data/vector_db/*
+data/tables/*
+
+# Keep directory structure
+!data/pdfs/.gitkeep
+!data/images/.gitkeep
+!data/vector_db/.gitkeep
+!data/tables/.gitkeep
+
+# Logs
+*.log
+
+>>>>>>> 62644faa2b3e1c3157bc0dcbf8e34f559b2993d9
 # OS
 .DS_Store
 Thumbs.db
 
+<<<<<<< HEAD
 # Data and images
 data/faiss_index/
 data/images/
 data/.env
+=======
+# Streamlit
+.streamlit/secrets.toml
+>>>>>>> 62644faa2b3e1c3157bc0dcbf8e34f559b2993d9
